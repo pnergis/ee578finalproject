@@ -25,7 +25,7 @@ er = ones(Ny+1,Nx+1);
 er(66:187,66:187) = 12;
 er(151:173,186:end) = 12;
 er(79:101,186:end) = 12;
-er(115:137,:) = 12;
+er(115:137,1:65) = 12;
 % Initialization of fields
 Ez = zeros(Ny+1,Nx+1);
 Dz = zeros(Ny+1,Nx+1);
