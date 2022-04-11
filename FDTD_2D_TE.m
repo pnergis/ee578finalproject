@@ -24,9 +24,9 @@ function [efficiency, er, Hz, Ey, Ex] = FDTD_2D_TE(pbs)
     % 	er(79:101,186:end) = 12;
     er((Ny/2-wg_size/dy/2)+1:(Ny/2+wg_size/dy/2)+1,...
         1:(Nx/2-pbs_size/dx/2)) = erSi;
-    er(((Ny/2+wg_dist/dy/2)-wg_size/dy/2)+12:((Ny/2+wg_dist/dy/2)+wg_size/dy/2)+12,...
+    er(((Ny/2+wg_dist/dy/2)-wg_size/dy/2):((Ny/2+wg_dist/dy/2)+wg_size/dy/2),...
         (Nx/2+pbs_size/dx/2)+1:end) = erSi;
-    er(((Ny/2-wg_dist/dy)-wg_size/dy/2)+12:((Ny/2-wg_dist/dy)+wg_size/dy/2)+12,...
+    er(((Ny/2-wg_dist/dy/2)-wg_size/dy/2):((Ny/2-wg_dist/dy/2)+wg_size/dy/2),...
         (Nx/2+pbs_size/dx/2)+1:end) = erSi;
     er = pixelToEr(pbs, er, erSi, Ny, Nx, dy, dx, pbs_size); % pbs
     
@@ -48,8 +48,8 @@ function [efficiency, er, Hz, Ey, Ex] = FDTD_2D_TE(pbs)
     % Source and probe locations
     xSource = -1850e-9;
     ySource = 0;
-    x_observation = 1000e-9;
-    y_observation = 0;
+    x_observation = 2020e-9;
+    y_observation = -500e-9;
     [X,Y] = meshgrid(linspace(-xDim/2,xDim/2,Nx+1),linspace(-yDim/2,yDim/2,Ny+1));
     diff_source = sqrt((X-xSource).^2+(Y-ySource).^2);
     [~,idx]=min(diff_source(:));
