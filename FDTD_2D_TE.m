@@ -11,7 +11,7 @@ function [efficiency, er, Hz, Ey, Ex] = FDTD_2D_TE(pbs)
     nTotal = 1e4;
     % Number of grids in each direction
     Nx = floor(xDim/dx);
-    Ny = floor(yDim/dy);
+    Ny = floor(yDim/dy);    
     % PBS pixel to epsilon grid
     er_Dx = ones(Ny+1,Nx);
     er_Dy = ones(Ny,Nx+1);
@@ -22,7 +22,7 @@ function [efficiency, er, Hz, Ey, Ex] = FDTD_2D_TE(pbs)
     pbs_size = 2400e-9;
     %   er(151:173,186:end) = 12;
     % 	er(79:101,186:end) = 12;
-    er((Ny/2-wg_size/dy/2)+1:(Ny/2+wg_size/dy/2)+1,...
+    er((Ny/2-wg_size/dy/2)+1:(Ny/2+wg_size/dy/2),...
         1:(Nx/2-pbs_size/dx/2)) = erSi;
     er(((Ny/2+wg_dist/dy/2)-wg_size/dy/2):((Ny/2+wg_dist/dy/2)+wg_size/dy/2),...
         (Nx/2+pbs_size/dx/2)+1:end) = erSi;
