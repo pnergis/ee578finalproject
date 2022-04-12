@@ -142,26 +142,18 @@ function [efficiency, er, Ez, Hy, Hx] = FDTD_2D_TM(pbs)
        Dz(2:Ny,2:Nx) = Dz1(2:Ny,2:Nx).*Dz(2:Ny,2:Nx) + dt./Dz2(2:Ny,2:Nx)./er(2:Ny,2:Nx).*((Hy(2:Ny,2:end)-Hy(2:Ny,1:(Nx-1)))/dx-(Hx(2:end,2:Nx)-Hx(1:(Ny-1),2:Nx))/dy); % step 5
        Ez(2:Ny,2:Nx) = Ez1(2:Ny,2:Nx).*Ez(2:Ny,2:Nx) + 1./Ez2(2:Ny,2:Nx).*(Dz(2:Ny,2:Nx)-Dz_BeforeUpdate(2:Ny,2:Nx)); % step 6
        %%%%% Fundamental Odd TM Mode
+       % Odd mode has had sources.
     %    Ez(127:137,L+10) = exp(-0.8936*2.2)/sin(1.0308*2.2)*sin(1.0308e7*(1:11)*dy)*cos(w0*n*dt);
     %    Ez(126,L+10) = 0;
     %    Ez(115:125,L+10) = -flipud(Ez(127:137,L+10));
     %    Ez(138:220,L+10) = exp(-0.8936*1e7*dy*(12:94))*cos(w0*n*dt);
-       Ez(32:114,L+10) = -flipud(Ez(138:220,L+10));
+    %  Ez(32:114,L+10) = -flipud(Ez(138:220,L+10));
        %%%%% Fundamental Even TM Mode
-       % Right Now the sources are hard. Need to be modified later.
-       Ez(127:137,L+10) = (exp(-1.236*2.2)/cos(0.5299*2.2)*cos(5.299e6*(1:11)*dy)*exp(-(n*dt-4*sigma)^2/(sigma^2))*sin(w0*(n*dt-4*sigma)))';
-       Ez(126,L+10) = (exp(-1.236*2.2)/cos(0.5299*2.2)*exp(-(n*dt-4*sigma)^2/(sigma^2))*sin(w0*(n*dt-4*sigma)))';
-       Ez(115:125,L+10) = flipud(Ez(127:137,L+10));
-       Ez(138:220,L+10) = (exp(-1.236*1e7*dy*(12:94))*exp(-(n*dt-4*sigma)^2/(sigma^2))*sin(w0*(n*dt-4*sigma)))';
-       Ez(32:114,L+10) = flipud(Ez(138:220,L+10));
-
-    %    %%%%% Fundamental Even TM Mode
-    %    Ez(127:137,L+10) = Ez(127:137,L+10) + (exp(-1.236*2.2)/cos(0.5299*2.2)*cos(5.299e6*(1:11)*dy)*exp(-(n*dt-4*sigma)^2/(sigma^2))*sin(w0*(n*dt-4*sigma)))';
-    %    Ez(126,L+10) = Ez(126,L+10) + (exp(-1.236*2.2)/cos(0.5299*2.2)*exp(-(n*dt-4*sigma)^2/(sigma^2))*sin(w0*(n*dt-4*sigma)))';
-    %    Ez(115:125,L+10) = flipud(Ez(127:137,L+10));
-    %    Ez(138:220,L+10) = Ez(138:220,L+10) + (exp(-1.236*1e7*dy*(12:94))*exp(-(n*dt-4*sigma)^2/(sigma^2))*sin(w0*(n*dt-4*sigma)))';
-    %    Ez(32:114,L+10) = flipud(Ez(138:220,L+10));
-    %     
+       Ez(127:137,L+10) = Ez(127:137,L+10) + (exp(-1.236*2.2)/cos(0.5299*2.2)*cos(5.299e6*(1:11)*dy)*exp(-(n*dt-4*sigma)^2/(sigma^2))*sin(w0*(n*dt-4*sigma)))';
+       Ez(126,L+10) = Ez(126,L+10) + (exp(-1.236*2.2)/cos(0.5299*2.2)*exp(-(n*dt-4*sigma)^2/(sigma^2))*sin(w0*(n*dt-4*sigma)))';
+       Ez(115:125,L+10) = Ez(115:125,L+10) + flipud((exp(-1.236*2.2)/cos(0.5299*2.2)*cos(5.299e6*(1:11)*dy)*exp(-(n*dt-4*sigma)^2/(sigma^2))*sin(w0*(n*dt-4*sigma)))');
+       Ez(138:220,L+10) = Ez(138:220,L+10)+ (exp(-1.236*1e7*dy*(12:94))*exp(-(n*dt-4*sigma)^2/(sigma^2))*sin(w0*(n*dt-4*sigma)))';
+       Ez(32:114,L+10) = Ez(32:114,L+10) + flipud((exp(-1.236*1e7*dy*(12:94))*exp(-(n*dt-4*sigma)^2/(sigma^2))*sin(w0*(n*dt-4*sigma)))');
 
        %%%%%
        Ez_Probe(n) = Ez(row_observation,col_observation);

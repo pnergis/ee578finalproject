@@ -147,12 +147,13 @@ function [efficiency, er, Hz, Ey, Ex] = FDTD_2D_TE(pbs)
        Bz = Bz1.*Bz + dt./Bz2.*((Ex(2:end,:)-Ex(1:Ny,:))./dy-(Ey(:,2:end)-Ey(:,1:Nx))./dx); 
        Hz = Hz1.*Hz + 1./Hz2.*(Bz-Bz_BeforeUpdate);
        %%%%% Fundamental Even TE Mode
-       % Right Now the sources are hard. Need to be modified later.
-       Hz(138:220,L+10) = (exp(-1.153*1e7*dy*(12:94))*exp(-(n*dt-4*sigma)^2/(sigma^2))*sin(w0*(n*dt-4*sigma)))';
-       Hz(127:137,L+10) = (exp(-1.153*2.2)/cos(0.6913*2.2)*cos(6.913e6*(1:11)*dy)*exp(-(n*dt-4*sigma)^2/(sigma^2))*sin(w0*(n*dt-4*sigma)))';
-       Hz(126,L+10) = (exp(-1.153*2.2)/cos(0.6913*2.2)*exp(-(n*dt-4*sigma)^2/(sigma^2))*sin(w0*(n*dt-4*sigma)))';
-       Hz(115:125,L+10) = flipud(Hz(127:137,L+10));
-       Hz(32:114,L+10) = flipud(Hz(138:220,L+10));
+       Hz(127:137,L+10) = Hz(127:137,L+10) + (exp(-1.153*2.2)/cos(0.6913*2.2)*cos(6.913e6*(1:11)*dy)*exp(-(n*dt-4*sigma)^2/(sigma^2))*sin(w0*(n*dt-4*sigma)))';
+       Hz(126,L+10) = Hz(126,L+10) + (exp(-1.153*2.2)/cos(0.6913*2.2)*exp(-(n*dt-4*sigma)^2/(sigma^2))*sin(w0*(n*dt-4*sigma)))';
+       Hz(115:125,L+10) = Hz(115:125,L+10) + flipud((exp(-1.153*2.2)/cos(0.6913*2.2)*cos(6.913e6*(1:11)*dy)*exp(-(n*dt-4*sigma)^2/(sigma^2))*sin(w0*(n*dt-4*sigma)))');
+       Hz(138:220,L+10) = Hz(138:220,L+10) + (exp(-1.153*1e7*dy*(12:94))*exp(-(n*dt-4*sigma)^2/(sigma^2))*sin(w0*(n*dt-4*sigma)))';
+       Hz(32:114,L+10) = Hz(32:114,L+10) + flipud(Hz(138:220,L+10));
+       
+       %%%%%
        Hz_Probe(n) = Hz(row_observation,col_observation);
        Hz_Excitation(n) = Hz(126,L+10);
 %        if(n>3000)
