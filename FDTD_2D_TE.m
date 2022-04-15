@@ -158,7 +158,9 @@ function [efficiency, er, Hz, Ey, Ex] = FDTD_2D_TE(pbs)
        
        %%%%%
        Hz_Probe(n) = Hz(row_observation,col_observation);
-       Hz_Excitation(n) = Hz(126,L+10);
+       % set excitation project to be the incident field to removed
+       % scattering effects (H_reflected)
+       Hz_Excitation(n) = (exp(-1.153*2.2)/cos(0.6913*2.2)*exp(-(n*dt-4*sigma)^2/(sigma^2))*sin(w0*(n*dt-4*sigma)));
 %        if(n>3000)
 %            pcolor(Hz);
 %            title(['Magnetic Field Profile at ', num2str(n), 'th time-step'])

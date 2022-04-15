@@ -150,7 +150,9 @@ function [efficiency, er, Ez, Hy, Hx] = FDTD_2D_TM(pbs)
 
        %%%%%
        Ez_Probe(n) = Ez(row_observation,col_observation);
-       Ez_Excitation(n) = Ez(126,L+10);
+       % set excitation project to be the incident field to removed
+       % scattering effects (E_reflected)
+       Ez_Excitation(n) = (exp(-1.236*2.2)/cos(0.5299*2.2)*exp(-(n*dt-4*sigma)^2/(sigma^2))*sin(w0*(n*dt-4*sigma)));
 %        if(n>4000)
 %            pcolor(X,Y,Ez);
 %            title(['Electric Field Profile at ', num2str(n), 'th time-step'])
