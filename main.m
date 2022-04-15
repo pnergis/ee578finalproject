@@ -15,9 +15,14 @@ tic
 [FOM_TE, FOM_TM, erTE, erTM, pbs] = optimizeDBS(pbs);
 toc
 
+%% validate optimized pbs
+[efficiency, ~, Ez, Hy, Hx] = FDTD_2D_TM(pbs);
+
+
 %%
 figure (1)
 pcolor(-2500e-9:20e-9:2500e-9,-2500e-9:20e-9:2500e-9,erTM)
+shading interp
 xlabel('x')
 ylabel('y')
 title('\epsilon of Domain');
