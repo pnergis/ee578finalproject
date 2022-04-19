@@ -167,6 +167,18 @@ for n=1:nTotal
     end
 
     %%%%%
+    if(n>4000 && enableAnimate && mod(n,10)==0 && ~slab && odd)
+        pcolor(X,Y,Hx);
+        title(['Magnetic Field Profile at ', num2str(n), 'th time-step'])
+        colorbar
+        rectangle('Position',[-xDim/2,-220e-9,1300e-9,440e-9]) % Input Waveguide
+        rectangle('Position',[-xDim/2+1300e-9,-1200e-9,2400e-9,2400e-9]) % Splitter
+        rectangle('Position',[-xDim/2+3700e-9,500e-9,xDim-3700e-9,440e-9]) % Output Waveguide - Upper
+        rectangle('Position',[-xDim/2+3700e-9,-940e-9,xDim-3700e-9,440e-9])
+        caxis([-0.3 0.3])
+        shading interp
+        pause(0.01);
+    end
     if(n>4000 && enableAnimate && mod(n,10)==0 && slab && odd)
         subplot(2,1,1)
         plot(Hx(126,:))
