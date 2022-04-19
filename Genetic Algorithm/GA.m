@@ -1,7 +1,10 @@
+% Dont forget to comment s
 popSize = 20; % Size of the population, must be a multiply of 4.
-numberofIterations = 20;
+numberofIterations = 30;
 mutationProbability = 0.1; % Mutation probability.
 performanceVector = zeros(popSize,1); % A vector of size popSize.
+performanceVectorTM = zeros(popSize,1);
+performanceVectorTE = zeros(popSize,1);
 populationMatrix = randi(2,[popSize,400])-1; % A matrix of size popSize by numberofParams (here 400). Each row corresponds to a specific gene.
 for i=1:numberofIterations
     tic;
@@ -16,18 +19,25 @@ for i=1:numberofIterations
             % 20 by 20. Then We have to resize this square to a bigger
             % square of size 122 by 122. The reason for that is beacuse our
             % simulation grid is much finer that optimization grid.
-            permittivity = 11*imresize(reshape(populationMatrix(j,:),[20,20]),[122,122],'nearest')+1;
+            permittivity = 11*imresize(reshape(populationMatrix(j,:),[20,20]),[120,120],'nearest')+1;
             % Now we use the generated profile for the simulation. Our
             % FDTD_TM has the ability to run an animation. Here we passed a
             % 0 as the second argument to disable this ability.
-            [performanceVector(j),~,~] = FDTD_TM(permittivity,0);
+            performanceVectorTE(j) = FDTD_TE(permittivity,0,0,1);
+            performanceVectorTM(j) = FDTD_TM(permittivity,0,0,0);
+            if(performanceVectorTE(j) > 1.5*performanceVectorTM(j) || 1.5*performanceVectorTE(j) < performanceVectorTM(j))
+                performanceVectorTE(j) = 0.7*performanceVectorTE(j);
+                performanceVectorTM(j) = 0.7*performanceVectorTM(j);
+            end
+            performanceVector(j) = (performanceVectorTE(j) + performanceVectorTM(j))/2; 
+
         end
     end
     % Now we have a generation (populationMatrix) and their performance
     % (performanceVector). No we want to sort our generation in a
     % descending order according to their performance.
-    [populationMatrix,performanceVector] = sorterGA(populationMatrix,performanceVector);
-    performanceVector %#ok<NOPTS> 
+    [populationMatrix,performanceVector,performanceVectorTM,performanceVectorTE] = sorterGA(populationMatrix,performanceVector,performanceVectorTM,performanceVectorTE);
+    [performanceVector,performanceVectorTM,performanceVectorTE] %#ok<NOPTS> 
     % Now we have a sorted generation. We need to perform crossover and
     % mutation to generate the next generation, and then repeat the for
     % loop.
