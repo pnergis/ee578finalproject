@@ -11,7 +11,7 @@ function efficiency = FDTD_TE(permittivity,enableAnimate,slab,odd)
 % Parameters to be change in case of increasing the size of domain:
 % row_observation, col_observation
 % Domain Size
-xDim = 5000e-9;
+xDim = 7000e-9;
 yDim = 5000e-9;
 % Grid step size
 dx = 20e-9;
@@ -192,22 +192,22 @@ for n=1:nTotal
         Hz(115:125,L+10) = -flipud(Hz(127:137,L+10));
         Hz(32:114,L+10) = -flipud(Hz(138:220,L+10));
     else
-%         Hard Sources
-                Hz(138:220,L+10) = (exp(-1.153*1e7*dy*(12:94))*exp(-(n*dt-4*sigma)^2/(sigma^2))*sin(w0*(n*dt-4*sigma)))';
-                Hz(127:137,L+10) = (exp(-1.153*2.2)/cos(0.6913*2.2)*cos(6.913e6*(1:11)*dy)*exp(-(n*dt-4*sigma)^2/(sigma^2))*sin(w0*(n*dt-4*sigma)))';
-                Hz(126,L+10) = (exp(-1.153*2.2)/cos(0.6913*2.2)*exp(-(n*dt-4*sigma)^2/(sigma^2))*sin(w0*(n*dt-4*sigma)))';
-                Hz(115:125,L+10) = flipud((exp(-1.153*2.2)/cos(0.6913*2.2)*cos(6.913e6*(1:11)*dy)*exp(-(n*dt-4*sigma)^2/(sigma^2))*sin(w0*(n*dt-4*sigma)))');
-                Hz(32:114,L+10) = flipud((exp(-1.153*1e7*dy*(12:94))*exp(-(n*dt-4*sigma)^2/(sigma^2))*sin(w0*(n*dt-4*sigma)))');
+        %         Hard Sources
+        Hz(138:220,L+10) = (exp(-1.153*1e7*dy*(12:94))*exp(-(n*dt-4*sigma)^2/(sigma^2))*sin(w0*(n*dt-4*sigma)))';
+        Hz(127:137,L+10) = (exp(-1.153*2.2)/cos(0.6913*2.2)*cos(6.913e6*(1:11)*dy)*exp(-(n*dt-4*sigma)^2/(sigma^2))*sin(w0*(n*dt-4*sigma)))';
+        Hz(126,L+10) = (exp(-1.153*2.2)/cos(0.6913*2.2)*exp(-(n*dt-4*sigma)^2/(sigma^2))*sin(w0*(n*dt-4*sigma)))';
+        Hz(115:125,L+10) = flipud((exp(-1.153*2.2)/cos(0.6913*2.2)*cos(6.913e6*(1:11)*dy)*exp(-(n*dt-4*sigma)^2/(sigma^2))*sin(w0*(n*dt-4*sigma)))');
+        Hz(32:114,L+10) = flipud((exp(-1.153*1e7*dy*(12:94))*exp(-(n*dt-4*sigma)^2/(sigma^2))*sin(w0*(n*dt-4*sigma)))');
         % Soft Sources
-%         Hz(138:220,L+10) = Hz(138:220,L+10) + (exp(-1.153*1e7*dy*(12:94))*exp(-(n*dt-4*sigma)^2/(sigma^2))*sin(w0*(n*dt-4*sigma)))';
-%         Hz(127:137,L+10) = Hz(127:137,L+10) + (exp(-1.153*2.2)/cos(0.6913*2.2)*cos(6.913e6*(1:11)*dy)*exp(-(n*dt-4*sigma)^2/(sigma^2))*sin(w0*(n*dt-4*sigma)))';
-%         Hz(126,L+10) = Hz(126,L+10) + (exp(-1.153*2.2)/cos(0.6913*2.2)*exp(-(n*dt-4*sigma)^2/(sigma^2))*sin(w0*(n*dt-4*sigma)))';
-%         Hz(115:125,L+10) = Hz(115:125,L+10) + flipud((exp(-1.153*2.2)/cos(0.6913*2.2)*cos(6.913e6*(1:11)*dy)*exp(-(n*dt-4*sigma)^2/(sigma^2))*sin(w0*(n*dt-4*sigma)))');
-%         Hz(32:114,L+10) = Hz(32:114,L+10) + flipud((exp(-1.153*1e7*dy*(12:94))*exp(-(n*dt-4*sigma)^2/(sigma^2))*sin(w0*(n*dt-4*sigma)))');
+        %         Hz(138:220,L+10) = Hz(138:220,L+10) + (exp(-1.153*1e7*dy*(12:94))*exp(-(n*dt-4*sigma)^2/(sigma^2))*sin(w0*(n*dt-4*sigma)))';
+        %         Hz(127:137,L+10) = Hz(127:137,L+10) + (exp(-1.153*2.2)/cos(0.6913*2.2)*cos(6.913e6*(1:11)*dy)*exp(-(n*dt-4*sigma)^2/(sigma^2))*sin(w0*(n*dt-4*sigma)))';
+        %         Hz(126,L+10) = Hz(126,L+10) + (exp(-1.153*2.2)/cos(0.6913*2.2)*exp(-(n*dt-4*sigma)^2/(sigma^2))*sin(w0*(n*dt-4*sigma)))';
+        %         Hz(115:125,L+10) = Hz(115:125,L+10) + flipud((exp(-1.153*2.2)/cos(0.6913*2.2)*cos(6.913e6*(1:11)*dy)*exp(-(n*dt-4*sigma)^2/(sigma^2))*sin(w0*(n*dt-4*sigma)))');
+        %         Hz(32:114,L+10) = Hz(32:114,L+10) + flipud((exp(-1.153*1e7*dy*(12:94))*exp(-(n*dt-4*sigma)^2/(sigma^2))*sin(w0*(n*dt-4*sigma)))');
     end
     if(n>4000 && mod(n,10)==0 && enableAnimate && ~slab && odd)
         pcolor(X,Y,Ex);
-        title(['Electric Field (E_{x}) Profile at ', num2str(n), 'th time-step'])
+        title(['Magnetic Field Profile at ', num2str(n), 'th time-step'])
         colorbar
         rectangle('Position',[-xDim/2,-220e-9,1300e-9,440e-9]) % Input Waveguide
         rectangle('Position',[-xDim/2+1300e-9,-1200e-9,2400e-9,2400e-9]) % Splitter
