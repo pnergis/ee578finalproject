@@ -3,10 +3,10 @@ function efficiency = FDTD_TM(permittivity,enableAnimate,slab,odd)
 % Author: Sepehr Eskandari
 % EE578: Computational Electromagnetics for Engineers, Spring 2022
 % Date: 3/16/2022
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Domain Size
-xDim = 5000e-9;
+xDim = 7000e-9; 
 yDim = 5000e-9;
 % Grid step size
 dx = 20e-9;
@@ -21,7 +21,6 @@ Ny = floor(yDim/dy);
 if(~odd)
     [X,Y] = meshgrid(linspace(-xDim/2,xDim/2,Nx),linspace(-yDim/2,yDim/2,Ny));
 else
-
     [X,Y] = meshgrid(linspace(-xDim/2,xDim/2,Nx),linspace(-yDim/2,yDim/2,Ny+1));
 end
 % Inhomogeneity
@@ -37,7 +36,7 @@ er(115:136,1:65) = 12;
 
 row_observation = 162;
 col_observation = Nx-25;
-% overwriting the structure with a single slab
+% overriding the structure with a single slab
 if(slab)
     er = ones(Ny,Nx);
     er(115:136,:) = 12;
@@ -129,6 +128,7 @@ for i=1:L
 end
 Ez1 = (1-Ez_SigmaY*dt/2)./(1+Ez_SigmaY*dt/2);
 Ez2 = 1+Ez_SigmaY*dt/2;
+
 Ez_observation = zeros(nTotal,1);
 Hx_observation = zeros(nTotal,1);
 % Update loop
