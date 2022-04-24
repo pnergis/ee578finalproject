@@ -1,7 +1,7 @@
 % Direct Binary Search Optimizer
 
-function [FOM_TE, FOM_TM, erTE, erTM, pbs] = optimizeDBS(pbs)
-    
+function [FOM_TE, FOM_TM, pbs] = optimizeDBS(pbs)
+   
     % initialize FOM for TE and TM
     FOM_TE_old = 0;
     FOM_TM_old = 0;
@@ -9,15 +9,19 @@ function [FOM_TE, FOM_TM, erTE, erTM, pbs] = optimizeDBS(pbs)
     history = zeros(400,2);
     % count # of iterations
     i=1;
+    % preallocate for 1000 iterations, keep track of improvement over
+    % iterations
+    FOM_TE = zeros(1000,1);
+    FOM_TM = zeros(1000,1);
     % begin optimization loop which ends once TE and TM have minimum 75%
     % transmission efficiency each in their respective output waveguides
     while (FOM_TE_old<85 || FOM_TM_old<85)
         % run FDTD for new FOMs
-        [FOM_TM, erTM, ~, ~, ~] = FDTD_2D_TM(pbs);
-        [FOM_TE, erTE, ~, ~, ~] = FDTD_2D_TE(pbs);
+        FOM_TM(i) = FDTD_2D_TM(pbs,0,0,0);
+        FOM_TE(i) = FDTD_2D_TE(pbs,0,0,0);
         
         % if results worsened for either TE and TM
-        if FOM_TE<FOM_TE_old || FOM_TM<FOM_TM_old
+        if FOM_TE(i)<FOM_TE_old || FOM_TM(i)<FOM_TM_old
                 % unflip the pixel
             if pbs(nxtpix(1),nxtpix(2)) == 1
                 pbs(nxtpix(1),nxtpix(2)) = 0;
@@ -27,15 +31,15 @@ function [FOM_TE, FOM_TM, erTE, erTM, pbs] = optimizeDBS(pbs)
         else
             % if pixel flip improved result, show new design
             figure (1)
-            pcolor(-2500e-9:20e-9:2500e-9,-2500e-9:20e-9:2500e-9,erTM)
+            pcolor(pbs)
             shading interp
             xlabel('x')
             ylabel('y') 
             title('\epsilon TM');
             set(gca,'YDir','normal')
         end
-        disp([i FOM_TM FOM_TE])
-        i=i+1; % update count
+        disp([i FOM_TM(i) FOM_TE(i)])
+        i=i+1; % update iteration count
         %check if other flips are possible
         if nnz(history) ~= 800 % 2*400 possible pixels * 2 because (m,n) storage
             FOM_TE_old = FOM_TE;
