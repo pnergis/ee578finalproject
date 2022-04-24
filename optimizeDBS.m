@@ -28,11 +28,14 @@ function [FOM_TE, FOM_TM, erTE, erTM, pbs] = optimizeDBS(pbs)
             % if pixel flip improved result, show new design
             figure (1)
             pcolor(-2500e-9:20e-9:2500e-9,-2500e-9:20e-9:2500e-9,erTM)
+            shading interp
             xlabel('x')
             ylabel('y') 
             title('\epsilon TM');
             set(gca,'YDir','normal')
         end
+        disp([i FOM_TM FOM_TE])
+        i=i+1; % update count
         %check if other flips are possible
         if nnz(history) ~= 800 % 2*400 possible pixels * 2 because (m,n) storage
             FOM_TE_old = FOM_TE;
@@ -52,12 +55,10 @@ function [FOM_TE, FOM_TM, erTE, erTM, pbs] = optimizeDBS(pbs)
             end
             % update history of changed pixels
             history(i,:) = nxtpix;
-            i=i+1; % update count
         else
             % clear the history list and rerun through pixels with new
             % optimized initial pbs until desired FOM achieved
             history = zeros(400,2);
         end
-        disp([i FOM_TM FOM_TE])
     end
 end

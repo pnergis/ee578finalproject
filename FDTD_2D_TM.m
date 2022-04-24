@@ -123,7 +123,7 @@ function [efficiency, er, Ez, Hy, Hx] = FDTD_2D_TM(pbs)
     Ez1 = (1-Ez_SigmaY*dt/2)./(1+Ez_SigmaY*dt/2);
     Ez2 = 1+Ez_SigmaY*dt/2;
     % For defining a figure of merit, I recored electric field at
-    % (2020nm,500nm) as the observation point and at (0,480nm) as excitation 
+    % (2020nm, 500nm) as the observation point and at (0,480nm) as excitation 
     % point and then calculated the ratio of maximum of probe location field to
     % the excitation location field.
     Ez_Probe = zeros(nTotal,1);
@@ -141,13 +141,6 @@ function [efficiency, er, Ez, Hy, Hx] = FDTD_2D_TM(pbs)
        Hy = Hy + Hy1.*By - Hy2.*By_BeforeUpdate; % step 4
        Dz(2:Ny,2:Nx) = Dz1(2:Ny,2:Nx).*Dz(2:Ny,2:Nx) + dt./Dz2(2:Ny,2:Nx)./er(2:Ny,2:Nx).*((Hy(2:Ny,2:end)-Hy(2:Ny,1:(Nx-1)))/dx-(Hx(2:end,2:Nx)-Hx(1:(Ny-1),2:Nx))/dy); % step 5
        Ez(2:Ny,2:Nx) = Ez1(2:Ny,2:Nx).*Ez(2:Ny,2:Nx) + 1./Ez2(2:Ny,2:Nx).*(Dz(2:Ny,2:Nx)-Dz_BeforeUpdate(2:Ny,2:Nx)); % step 6
-       %%%%% Fundamental Odd TM Mode
-       % Odd mode has had sources.
-    %    Ez(127:137,L+10) = exp(-0.8936*2.2)/sin(1.0308*2.2)*sin(1.0308e7*(1:11)*dy)*cos(w0*n*dt);
-    %    Ez(126,L+10) = 0;
-    %    Ez(115:125,L+10) = -flipud(Ez(127:137,L+10));
-    %    Ez(138:220,L+10) = exp(-0.8936*1e7*dy*(12:94))*cos(w0*n*dt);
-    %  Ez(32:114,L+10) = -flipud(Ez(138:220,L+10));
        %%%%% Fundamental Even TM Mode
        Ez(127:137,L+10) = Ez(127:137,L+10) + (exp(-1.236*2.2)/cos(0.5299*2.2)*cos(5.299e6*(1:11)*dy)*exp(-(n*dt-4*sigma)^2/(sigma^2))*sin(w0*(n*dt-4*sigma)))';
        Ez(126,L+10) = Ez(126,L+10) + (exp(-1.236*2.2)/cos(0.5299*2.2)*exp(-(n*dt-4*sigma)^2/(sigma^2))*sin(w0*(n*dt-4*sigma)))';
@@ -157,19 +150,21 @@ function [efficiency, er, Ez, Hy, Hx] = FDTD_2D_TM(pbs)
 
        %%%%%
        Ez_Probe(n) = Ez(row_observation,col_observation);
-       Ez_Excitation(n) = Ez(126,L+10);
-    %    if(n>4000)
-    %        pcolor(X,Y,Ez);
-    %        title(['Electric Field Profile at ', num2str(n), 'th time-step'])
-    %        colorbar
-    %        rectangle('Position',[-1200e-9,-1200e-9,2400e-9,2400e-9]);
-    %        rectangle('Position',[-2500e-9,-220e-9,1300e-9,440e-9]);
-    %        rectangle('Position',[1200e-9,-720e-9,1300e-9,440e-9]);
-    %        rectangle('Position',[1200e-9,280e-9,1300e-9,440e-9]);
-    %        caxis([-0.1 0.1])
-    %        shading interp
-    %        pause(0.01);
-    %    end
+       % set excitation project to be the incident field to removed
+       % scattering effects (E_reflected)
+       Ez_Excitation(n) = (exp(-1.236*2.2)/cos(0.5299*2.2)*exp(-(n*dt-4*sigma)^2/(sigma^2))*sin(w0*(n*dt-4*sigma)));
+%        if(n>4000)
+%            pcolor(X,Y,Ez);
+%            title(['Electric Field Profile at ', num2str(n), 'th time-step'])
+%            colorbar
+%            rectangle('Position',[-1200e-9,-1200e-9,2400e-9,2400e-9]);
+%            rectangle('Position',[-2500e-9,-220e-9,1300e-9,440e-9]);
+%            rectangle('Position',[1200e-9,-720e-9,1300e-9,440e-9]);
+%            rectangle('Position',[1200e-9,280e-9,1300e-9,440e-9]);
+%            caxis([-0.3 0.3])
+%            shading interp
+%            pause(0.01);
+%        end
     end
     efficiency = 100*(max(Ez_Probe) / max(Ez_Excitation));
 end

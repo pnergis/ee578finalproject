@@ -130,7 +130,10 @@ function [efficiency, er, Hz, Ey, Ex] = FDTD_2D_TE(pbs)
     end
     Hz1 = (1-Hz_SigmaY*dt/2)./(1+Hz_SigmaY*dt/2);
     Hz2 = 1+Hz_SigmaY*dt/2;
-
+    % For defining a figure of merit, I recored electric field at
+    % (2020nm, -500nm) as the observation point and at (0,480nm) as excitation 
+    % point and then calculated the ratio of maximum of probe location field to
+    % the excitation location field.
 
     Hz_Probe = zeros(nTotal,1);
     Hz_Excitation = zeros(nTotal,1);
@@ -151,11 +154,13 @@ function [efficiency, er, Hz, Ey, Ex] = FDTD_2D_TE(pbs)
        Hz(126,L+10) = Hz(126,L+10) + (exp(-1.153*2.2)/cos(0.6913*2.2)*exp(-(n*dt-4*sigma)^2/(sigma^2))*sin(w0*(n*dt-4*sigma)))';
        Hz(115:125,L+10) = Hz(115:125,L+10) + flipud((exp(-1.153*2.2)/cos(0.6913*2.2)*cos(6.913e6*(1:11)*dy)*exp(-(n*dt-4*sigma)^2/(sigma^2))*sin(w0*(n*dt-4*sigma)))');
        Hz(138:220,L+10) = Hz(138:220,L+10) + (exp(-1.153*1e7*dy*(12:94))*exp(-(n*dt-4*sigma)^2/(sigma^2))*sin(w0*(n*dt-4*sigma)))';
-       Hz(32:114,L+10) = Hz(32:114,L+10) + flipud(Hz(138:220,L+10));
+       Hz(32:114,L+10) = Hz(32:114,L+10) + flipud((exp(-1.153*1e7*dy*(12:94))*exp(-(n*dt-4*sigma)^2/(sigma^2))*sin(w0*(n*dt-4*sigma)))');
        
        %%%%%
        Hz_Probe(n) = Hz(row_observation,col_observation);
-       Hz_Excitation(n) = Hz(126,L+10);
+       % set excitation project to be the incident field to removed
+       % scattering effects (H_reflected)
+       Hz_Excitation(n) = (exp(-1.153*2.2)/cos(0.6913*2.2)*exp(-(n*dt-4*sigma)^2/(sigma^2))*sin(w0*(n*dt-4*sigma)));
 %        if(n>3000)
 %            pcolor(Hz);
 %            title(['Magnetic Field Profile at ', num2str(n), 'th time-step'])
@@ -164,7 +169,7 @@ function [efficiency, er, Hz, Ey, Ex] = FDTD_2D_TE(pbs)
 %            rectangle('Position',[-1200e-9,-1200e-9,2400e-9,2400e-9])
 %            rectangle('Position',[1200e-9,-720e-9,1300e-9,440e-9])
 %            rectangle('Position',[1200e-9,280e-9,1300e-9,440e-9])
-%            caxis([-0.01 0.01])
+%            caxis([-0.3 0.3])
 %            shading interp
 %            pause(0.01);
 %        end
