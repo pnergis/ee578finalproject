@@ -1,0 +1,23 @@
+==========================================
+SLURM_JOB_ID = 8076428
+SLURM_JOB_NODELIST = d05-07
+TMPDIR = /tmp/SLURM_8076428
+==========================================
+[Warning: MATLAB has disabled some advanced graphics rendering features by switching to software OpenGL. For more information, click <a href="matlab:opengl('problems')">here</a>.] 
+    2.0000   39.9786   25.3735
+
+    3.0000   40.5587   28.2598
+
+    4.0000   40.5904   29.2626
+
+    5.0000   40.4303   27.7137
+
+    6.0000   35.2554   20.8094
+
+    7.0000   38.0975   29.8167
+
+    8.0000   38.6554   31.0356
+
+    9.0000   42.3784   30.8533
+
+slurmstepd: error: *** JOB 8076428 ON d05-07 CANCELLED AT 2022-04-14T12:51:33 ***

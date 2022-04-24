@@ -1,0 +1,11 @@
+#!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=20
+#SBATCH --mem=16GB
+#SBATCH --time=5:00:00
+#SBATCH --account=mahta_676
+module purge
+module load matlab/2020b
+# Do not include the .m extension in your script name (script.m)
+matlab -batch 'main'
