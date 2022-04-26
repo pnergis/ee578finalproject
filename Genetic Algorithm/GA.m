@@ -5,7 +5,14 @@ mutationProbability = 0.1; % Mutation probability.
 performanceVector = zeros(popSize,1); % A vector of size popSize.
 performanceVectorTM = zeros(popSize,1);
 performanceVectorTE = zeros(popSize,1);
-populationMatrix = randi(2,[popSize,400])-1; % A matrix of size popSize by numberofParams (here 400). Each row corresponds to a specific gene.
+% populationMatrix = randi([0 1], popSize,400); % A matrix of size popSize by numberofParams (here 400). Each row corresponds to a specific gene.
+populationMatrix = ones(popSize,400); % A matrix of size popSize by numberofParams (here 400). Each row corresponds to a specific gene.
+% randomly change 5 bits to 0 of the all ones initial design to minimize randomness
+for i=1:popSize
+    for j=1:5
+        populationMatrix(i,randi([1 400], 1)) = 0;
+    end
+end
 performanceRecordedOverIteration = zeros(numberofIterations,3);
 for i=1:numberofIterations
     tic;
