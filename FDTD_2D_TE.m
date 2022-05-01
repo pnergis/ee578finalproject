@@ -2,7 +2,7 @@
 % to be double checked.
 % For soft source implementation uncomment lines 202 to 206 and modify the
 % line 262 (Refer to its comment).
-function efficiency = FDTD_2D_TE(permittivity,enableAnimate,slab,odd)
+function [efficiency] = FDTD_2D_TE(permittivity,enableAnimate,slab,odd)
 
     % Parameters to be change in case of increasing the size of domain:
     % row_observation, col_observation
@@ -253,8 +253,12 @@ function efficiency = FDTD_2D_TE(permittivity,enableAnimate,slab,odd)
         end
     end
     if(odd)
-        efficiency = max(Ex_observation)/0.4156;
+%         efficiency = max(Ex_observation)/0.4156;
+        freqEx = fft(Ex_observation);
+        efficiency = abs(freqEx)/526.424;
     else
-        efficiency = max(Hz_observation)/1.5809; % Use 4.4143 for soft sources, and 1.5809 for hard source.
+%         efficiency = max(Hz_observation)/1.5809; % Use 4.4143 for soft sources, and 1.5809 for hard source.
+        freqHz = fft(Hz_observation);
+        efficiency = abs(freqHz)/2118.4;
     end
 end
