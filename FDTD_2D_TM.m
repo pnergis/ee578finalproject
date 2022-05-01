@@ -216,10 +216,10 @@ function [efficiency] = FDTD_2D_TM(permittivity,enableAnimate,slab,odd)
     if(odd)
 %         efficiency = max(Hx_observation) / 0.4937;
         freqHx = fft(Hx_observation);
-        efficiency = abs(freqHx)/650.527;
+        efficiency = max(abs(freqHx)/650.527);
     else
 %         efficiency = max(Ez_observation) / 0.1669; % Use 0.434 for soft sources, and 0.1669 for hard sources
         freqEz = fft(Ez_observation);
-        efficiency = abs(freqEz)/227.019;
+        efficiency = max(abs(freqEz))/227.019;
     end
 end
