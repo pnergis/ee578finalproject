@@ -3,7 +3,7 @@
 % mode 1 optimizes only TE
 % mode 2 optimizes only TM
 % mode 3 optimizes both TE and TM simultaneously
-function [FOM_TE, FOM_TM, pbs] = binPSO(N, mode)
+function [FOM_TE, FOM_TM, pbs, pGbestHistory] = binPSO(N, mode)
 
 % i refers to particle index and j refers pixel in the
 % reshaped pbs 20x20 design
@@ -11,16 +11,17 @@ function [FOM_TE, FOM_TM, pbs] = binPSO(N, mode)
 % initialize the swarm Xi, the positions of the particles are randomly
 % initialized within the hypercube. Elements of Xi are randomly
 % selected from binary values 0 and 1
-% X = randi([0 1], N, 400);
-X = ones( N, 400);
-for i=1:N
-    for j=1:5
-        X(i,randi([1 400], 1)) = 0;
-    end
-end
+X = randi([0 1], N, 400);
+% X = ones( N, 400);
+% for i=1:N
+%     for j=1:5
+%         X(i,randi([1 400], 1)) = 0;
+%     end
+% end
 % 2 element row for TE FOM and TM FOM values then 400 element pbs]
 pbest = zeros(N,402);
 pGbest = zeros(1,402);
+pGbestHistory = zeros(1000,402);
 
 d1 = zeros(N,400);
 d0 = zeros(N,400);
@@ -33,8 +34,8 @@ vC = zeros(N,400);
 r = zeros(N,400);
 
 % initialize constants
-c1 = 2; c2 = 2;
-w=0.5;
+c1 = 0.8; c2 = 2;
+w=2;
 
 % preallocate for 1000 iterations, this will save the TE and TM
 % efficiency for each particles FDTDs at each iteration of the while
@@ -47,7 +48,7 @@ t = 1;
 % begin optimization loop which ends once TE and TM have minimum 85%
 % field transmission efficiency each in their respective output waveguides
 if mode == 1
-    while (pGbest(1)<0.80)
+    while (pGbest(1)<0.85)
         r1 = randi([0 1]); r2 = randi([0 1]); % updated each iteration
         
         % Evaluate the performace FOMs of each particle using its current
@@ -78,6 +79,7 @@ if mode == 1
                 pGbest(3:end) = X(i,:);
             end
         end
+        pGbestHistory(i,:) = pGbest;
         
         % Change the velocity of the particle, v0(i), v1(i) according to eq
         % (6,7) from the paper
@@ -133,6 +135,7 @@ if mode == 1
         end
         disp([t pGbest(1)])
         figure (1)
+        pbs = 11*imresize(reshape(pGbest(3:402),[20,20]),[120,120],'nearest')+1;
         pcolor(pbs)
         xlabel('x')
         ylabel('y')
@@ -141,7 +144,7 @@ if mode == 1
         t=t+1;
     end
 elseif mode == 2
-    while (pGbest(2)<0.80)
+    while (pGbest(2)<0.85)
         r1 = randi([0 1]); r2 = randi([0 1]); % updated each iteration
         
         % Evaluate the performace FOMs of each particle using its current
@@ -170,8 +173,10 @@ elseif mode == 2
             if FOM_TM(i,t) > pGbest(2)
                 pGbest(2) = FOM_TM(i,t);
                 pGbest(3:end) = X(i,:);
+                
             end
         end
+        pGbestHistory(i,:) = pGbest;
         
         % Change the velocity of the particle, v0(i), v1(i) according to eq
         % (6,7) from the paper
@@ -226,6 +231,7 @@ elseif mode == 2
             % while loop
         end
         disp([t pGbest(2)])
+        pbs = 11*imresize(reshape(pGbest(3:402),[20,20]),[120,120],'nearest')+1;
         figure (1)
         pcolor(pbs)
         xlabel('x')
@@ -235,7 +241,7 @@ elseif mode == 2
         t=t+1;
     end
 else
-    while (pGbest(1)<0.80 || pGbest(2)<0.80)
+    while (pGbest(1)<0.85 || pGbest(2)<0.85)
         r1 = randi([0 1]); r2 = randi([0 1]); % updated each iteration
         
         % Evaluate the performace FOMs of each particle using its current
@@ -267,8 +273,10 @@ else
                 pGbest(1) = FOM_TE(i,t);
                 pGbest(2) = FOM_TM(i,t);
                 pGbest(3:end) = X(i,:);
+                
             end
         end
+        pGbestHistory(i,:) = pGbest;
         
         % Change the velocity of the particle, v0(i), v1(i) according to eq
         % (6,7) from the paper
@@ -309,7 +317,7 @@ else
                 
                 % Generate the random variable rij in the range (0,1). Move
                 % each particle to a new position using eq (8)
-                % to flip or not to flip to the 2's complement
+                % to flip or not to flip
                 r(i,j) = randi([0 1]);
                 if r(i,j) < vC(i,j)
                     if X(i,j)==0
@@ -323,6 +331,7 @@ else
             % while loop
         end
         disp([t pGbest(1) pGbest(2)])
+        pbs = 11*imresize(reshape(pGbest(3:402),[20,20]),[120,120],'nearest')+1;
         figure (1)
         pcolor(pbs)
         xlabel('x')
